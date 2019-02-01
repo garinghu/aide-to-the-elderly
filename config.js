@@ -32,6 +32,13 @@ export default config = {
         },
         //tab 页指示符的样式 (tab页下面的一条线).
         indicatorStyle: {height: 0},
-    }
-    
+    },
+    // proxy: 'http://188.131.233.116:3000',
+    proxy: 'http://localhost:3000',
+    socketServer: 'http://localhost:8088',
+    postTypes: ['测试', '类别1', '类别2'],
+    buttonStyles: ['#2463f6', '#67aa56', '#e0a051', '#bf4744'],
+    clockRepeat: ['永不','星期一','星期二','星期三','星期四','星期五','星期六','星期日'],
+    loginTitle: '唯愿贤明身后在，不悔须臾做先锋',
+    alarmTitle: '没有人是孤独的',
 }

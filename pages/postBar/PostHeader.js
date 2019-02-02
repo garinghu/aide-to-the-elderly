@@ -2,7 +2,8 @@ import React from 'react';
 import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Image, DeviceEventEmitter } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Container, Header, Left, Body, Right, Button, Icon, Title, Item, Input } from 'native-base';
+import { Header, Right, Button, Text, Body } from 'native-base';
+import { Tabs } from '@ant-design/react-native';
 import Axios from 'axios';
 
 class PostHeader extends React.Component {
@@ -16,17 +17,28 @@ class PostHeader extends React.Component {
         navigation.navigate('NewPost');
     }
 
+    changeTab = (tab, index) => {
+        DeviceEventEmitter.emit('changeMessageType', tab.type)
+    }
+
     render() {
+        const tabs = [{
+            title: '推荐',
+            type: 'normal',
+        }, {
+            title: '好友动态',
+            type: 'friend',
+        }]
         const state = this.state;
         return (
             <View style={styles.container}>
                 <Header>
-                    <Left>
-                        <Item rounded 
-                        style={{ height: 30, width: 280, borderColor: '#ed6560', backgroundColor: '#fff' }}>
-                            <Input style={{color: '#ed6560'}} placeholder='发现新内容...'/>
-                        </Item>
-                    </Left>
+                    <Tabs tabs={tabs}
+                    tabBarBackgroundColor="#f8f8f8"
+                    tabBarUnderlineStyle={{ backgroundColor: '#ed6560' }}
+                    tabBarActiveTextColor="#ed6560"
+                    onChange={this.changeTab}>
+                    </Tabs>
                     <Right>
                         <Button transparent onPress={() => DeviceEventEmitter.emit('showModal')}>
                             <FontAwesome name='search' style={{ fontSize: 18, fontWeight: 'lighter', color: '#ed6560' }}/>

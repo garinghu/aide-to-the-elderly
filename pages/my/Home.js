@@ -41,6 +41,11 @@ export default class Home extends React.Component {
         const { navigation } = this.props;
         navigation.navigate('Alarm');
     }
+
+    toHealth = () => {
+        const { navigation } = this.props;
+        navigation.navigate('HealthHome');
+    }
     
 
     render() {
@@ -76,6 +81,22 @@ export default class Home extends React.Component {
                             </Body>
                             <Right>
                                 <TouchableOpacity onPress={() => this.toAlarm()}>
+                                    <Icon active name="arrow-forward" />
+                                </TouchableOpacity>
+                            </Right>
+                        </ListItem>
+
+                        <ListItem itemDivider icon  style={{ backgroundColor: "#fff", marginTop: 2 }}>
+                            <Left>
+                                <Button style={{ backgroundColor: "#64c957" }}>
+                                    <Icon active name="md-flower" />
+                                </Button>
+                            </Left>
+                            <Body>
+                                <Text style={{ fontSize: 14 }}>健康管理</Text>
+                            </Body>
+                            <Right>
+                                <TouchableOpacity onPress={() => this.toHealth()}>
                                     <Icon active name="arrow-forward" />
                                 </TouchableOpacity>
                             </Right>

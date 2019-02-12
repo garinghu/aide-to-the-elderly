@@ -5,6 +5,7 @@ import Home from './Home';
 import ChangeUserInfo from './ChangeUserInfo';
 import Alarm from './AlarmSetting';
 import AlarmDetail from './AlarmDetail';
+import HealthHome from './HealthHome';
 
 export default createStackNavigator({
     Home: {
@@ -24,6 +25,12 @@ export default createStackNavigator({
     },
     AlarmDetail: {
         screen: AlarmDetail,
+        navigationOptions: {
+            header: null,
+        }
+    },
+    HealthHome: {
+        screen: HealthHome,
         navigationOptions: {
             header: null,
         }

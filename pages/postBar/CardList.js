@@ -59,6 +59,15 @@ export default class PostBar extends React.Component {
         // storage.save('clocks', []);
         // storage.save('searchList', searchList);
         // storage.save('friendInfo', friendInfo);
+        storage.save('healthInfo', {
+            '2019-02-12': {
+                weight: 145,
+                sleep: 10,
+                hBloodPressure: 140,
+                lBloodPressure: 60,
+                pulse: 40,
+            }
+        });
         // storage.load('userInfo', res => {
         //     console.log(res);
         // })

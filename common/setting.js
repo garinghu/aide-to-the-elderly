@@ -43,6 +43,15 @@ export const getDate = () => {
     return `${year}年${month}月${day}日 ${hour}:${minute}:${second}`
 }
 
+export const getDateYYMMDD = () => {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = (date.getMonth()+1) < 10 ? `0${date.getMonth()+1}` : date.getMonth()+1;
+    var day = date.getDate() < 10 ? `0${date.getDate()+1}` : date.getDate();
+   
+    return `${year}-${month}-${day}`
+}
+
 
 export function Base64() {
  

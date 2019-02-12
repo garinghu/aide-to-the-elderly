@@ -41,4 +41,31 @@ export default config = {
     clockRepeat: ['永不','星期一','星期二','星期三','星期四','星期五','星期六','星期日'],
     loginTitle: '唯愿贤明身后在，不悔须臾做先锋',
     alarmTitle: '没有人是孤独的',
+    healthTitles: [
+        {
+            key: 'weight',
+            title: '体重',
+            unit: 'Kg',
+        },
+        {
+            key: 'sleep',
+            title: '睡眠',
+            unit: 'h',
+        },
+        {
+            key: 'hBloodPressure',
+            title: '收缩压',
+            unit: 'mmHg',
+        },
+        {
+            key: 'lBloodPressure',
+            title: '舒张压',
+            unit: 'mmHg',
+        },
+        {
+            key: 'pulse',
+            title: '脉搏',
+            unit: '次',
+        },
+    ]
 }

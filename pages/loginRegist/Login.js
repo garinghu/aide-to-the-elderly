@@ -41,6 +41,9 @@ export default class Login extends React.Component {
                         });
                         storage.save('chatInfo', []);
                         storage.save('clockes', []);
+                        storage.save('searchList', []);
+                        storage.save('friendInfo', []);
+                        storage.save('alarmInfo',  []);
                         navigation.navigate('PostBar');
                     }
                 })

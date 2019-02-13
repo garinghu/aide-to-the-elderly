@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, DeviceEventEmitter, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, DeviceEventEmitter, TouchableOpacity, Dimensions } from 'react-native';
 import { Container, Text , Card, CardItem, Body } from 'native-base';
 import { Agenda, LocaleConfig } from 'react-native-calendars';
 import { Tabs } from '@ant-design/react-native';
@@ -10,6 +10,7 @@ import { getDateYYMMDD } from '../../common/setting';
 import { monthNames, dayNames, dayNamesShort } from '../../common/local';
 import MyHeader from '../../common/MyHeader';
 import HealthCard from './HealthCard';
+import HealthAddModal from './HealthAddModal';
 
 LocaleConfig.locales['fr'] = {
     monthNames,
@@ -21,13 +22,15 @@ LocaleConfig.locales['fr'] = {
 LocaleConfig.defaultLocale = 'fr';
 
 const maxDate = getDateYYMMDD();
+const { healthTitles } = Config;
 
 export default class HealthHome extends React.Component {
     
     constructor(props) {
         super(props);
         this.state = {
-            items: {}
+            items: {},
+            showModal: false,
         };
     }
 
@@ -38,19 +41,6 @@ export default class HealthHome extends React.Component {
     loadItems(day) {
         setTimeout(() => {
             storage.load('healthInfo', res => {
-                // for (let i = -15; i < 1; i++) {
-                //     const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-                //     const strTime = this.timeToString(time);
-                //     this.state.items[strTime] = res[strTime] || [{
-                //         name: '暂无记录',
-                //         height: 50,
-                //     }]
-                // }
-                // const newItems = {};
-                // Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
-                // this.setState({
-                //     items: newItems
-                // });
                 const time = day.timestamp;
                 const strTime = this.timeToString(time);
                 const newItems = {};
@@ -62,15 +52,36 @@ export default class HealthHome extends React.Component {
         }, 1000);
     }
 
+    refreshData = (data) => {
+        const newData = {};
+        newData[maxDate] = [data];
+        // agenda在修改选择日期的时候才会刷新，固出此下策
+        this.setState({
+            items: {},
+        }, () => {
+            this.setState({
+                items: newData
+            })
+        });
+        
+    }
+
     renderItem(item) {
         return (
-            <HealthCard item={item}/>
+            <HealthCard item={item} showModal={() => this.setState({ showModal: true })}/>
         );
     }
 
-    renderEmptyDate() {
+    renderEmptyDate(day) {
         return (
-            <View style={styles.emptyDate}><Text style={{ color: '#fff' }}>暂无数据</Text></View>
+            this.timeToString(day) == maxDate ? <TouchableOpacity
+            onPress={() => this.setState({ showModal: true })}>
+                <View style={styles.emptyDate}>
+                    <Text style={{ color: '#fff' }}>添加数据</Text>
+                </View>
+            </TouchableOpacity> : <View style={styles.emptyDate}>
+                <Text style={{ color: '#fff' }}>暂无数据</Text>
+            </View>
         );
     }
     
@@ -90,6 +101,7 @@ export default class HealthHome extends React.Component {
         }, {
             title: '健康数据',
         }]
+        const { showModal } = this.state;
         return (
             <Container style={styles.container}>
                 <MyHeader callBack={() => {
@@ -121,10 +133,19 @@ export default class HealthHome extends React.Component {
                                 }}
                             />
                             <View style={{ flex: 1 }}>
-                                <Text>asd</Text>
+                                <View style={styles.healthCardContainer}>
+                                    {
+                                        healthTitles.map((i, index) => <View key={index} style={styles.healthCard}>
+                                            <Text style={{ color: '#fff' }}>{i.title}</Text>
+                                        </View>)
+                                    }
+                                </View>
                             </View>
                         </Tabs>
                     </View>
+                    <HealthAddModal show={showModal}
+                    refreshData={(data) => this.refreshData(data)}
+                    date={maxDate} closeModal={() => this.setState({ showModal: false })}/>
             </Container>
         );
     }
@@ -144,5 +165,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    healthCardContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 5,
+        marginBottom: 5,
+    },
+    healthCard: {
+        width: (Dimensions.get('window').width  * 0.33 - 2),
+        height: 100,
+        marginLeft: 2,
+        marginTop: 2,
+        borderRadius: 5,
+        backgroundColor: '#ed6560',
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });

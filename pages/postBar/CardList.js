@@ -66,6 +66,7 @@ export default class PostBar extends React.Component {
                 hBloodPressure: 140,
                 lBloodPressure: 60,
                 pulse: 40,
+                date: '2019-02-12',
             }
         });
         // storage.load('userInfo', res => {

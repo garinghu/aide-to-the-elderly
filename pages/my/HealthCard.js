@@ -3,9 +3,11 @@ import { StyleSheet, View, DeviceEventEmitter, TouchableOpacity } from 'react-na
 import { Text , Card, CardItem, Body } from 'native-base';
 
 import { storage } from '../../storage';
+import { getDateYYMMDD } from '../../common/setting';
 import Config from '../../config';
 
 const { healthTitles } = Config;
+const maxDate = getDateYYMMDD();
 
 export default class HealthCard extends React.Component {
     
@@ -14,7 +16,7 @@ export default class HealthCard extends React.Component {
     }
 
     render() {
-        const { item } = this.props;
+        const { item, showModal } = this.props;
         return (
             <View>
                 {
@@ -27,6 +29,14 @@ export default class HealthCard extends React.Component {
                             <Text style={{ color: '#fff', fontSize: 15 }}>{i.unit}</Text>
                         </View>
                     </View>)
+                }
+                {
+                    item.date == maxDate && <TouchableOpacity
+                    onPress={showModal}>
+                        <View style={styles.emptyDate}>
+                            <Text style={{ color: '#fff' }}>修改数据</Text>
+                        </View>
+                    </TouchableOpacity>
                 }
             </View>
         );
@@ -52,5 +62,16 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         marginRight: 5,
-    }
+    },
+    emptyDate: {
+        flex: 1, 
+        height: 80, 
+        backgroundColor: '#ed6560', 
+        marginRight: 10,
+        marginTop: 10,
+        borderRadius: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });

@@ -93,6 +93,11 @@ export default class HealthHome extends React.Component {
         const date = new Date(time);
         return date.toISOString().split('T')[0];
     }
+
+    toHealthChart = (date, type, unit) => {
+        const { navigation } = this.props;
+        navigation.navigate('HealthChart', { date, type, unit});
+    }
     
 
     render() {
@@ -135,9 +140,12 @@ export default class HealthHome extends React.Component {
                             <View style={{ flex: 1 }}>
                                 <View style={styles.healthCardContainer}>
                                     {
-                                        healthTitles.map((i, index) => <View key={index} style={styles.healthCard}>
-                                            <Text style={{ color: '#fff' }}>{i.title}</Text>
-                                        </View>)
+                                        healthTitles.map((i, index) => <TouchableOpacity key={index} 
+                                        onPress={() => this.toHealthChart(maxDate, i.key, i.unit)}>
+                                            <View style={styles.healthCard}>
+                                                <Text style={{ color: '#fff' }}>{i.title}</Text>
+                                            </View>
+                                        </TouchableOpacity>)
                                     }
                                 </View>
                             </View>

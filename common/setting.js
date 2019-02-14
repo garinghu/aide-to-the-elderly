@@ -52,6 +52,62 @@ export const getDateYYMMDD = () => {
     return `${year}-${month}-${day}`
 }
 
+// 根据当前日期返回最近一周的日期
+export const getTheWeekDaysYYMMDD = (y, m, d) => {
+    var currentDate = new Date(y, m, d)
+    var timesStamp = currentDate.getTime();
+    var currenDay = currentDate.getDay();
+    var dates = [];
+    for (var i = 0; i < 7; i++) {
+        dates.push(new Date(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).toLocaleDateString().replace(/\//g, '-'));
+    }
+    return reverseDates(dates)
+}
+
+export const getTheMounthDaysYYMMDD = (y, m, d) => {
+    var dates = [];
+    var thisMounthDays = getDaysInOneMonth(y, m);
+    for (var i = 0; i < thisMounthDays; i++) {
+        dates.push(`${y}-${(m + '').length < 2 ? 0 + '' + m : m}-${i+1 < 10 ? 0 + ''+ (i + 1) : i + 1}`)
+    }
+    return dates
+}
+
+function getDaysInOneMonth(year, month){
+    month = parseInt(month, 10);
+    var d= new Date(year, month, 0);
+    return d.getDate();
+}
+
+export const getLastDate = (y, m, d) => {
+    var currentDate = new Date(y, m, d)
+    var timesStamp = currentDate.getTime();
+    var date = new Date(timesStamp - 24 * 60 * 60 * 1000 ).toLocaleDateString().replace(/\//g, '-');
+    let year = date.split('-')[2];
+    let mounth = date.split('-')[0];
+    let day = date.split('-')[1];
+    return `${year}-${mounth}-${day}`
+}
+
+export const getNextDate = (y, m, d) => {
+    var currentDate = new Date(y, m, d)
+    var timesStamp = currentDate.getTime();
+    var date = new Date(timesStamp + 24 * 60 * 60 * 1000 ).toLocaleDateString().replace(/\//g, '-');
+    let year = date.split('-')[2];
+    let mounth = date.split('-')[0];
+    let day = date.split('-')[1];
+    return `${year}-${mounth}-${day}`
+}
+
+function reverseDates(dates) {
+    return dates.map(i => {
+        let year = i.split('-')[2];
+        let mounth = i.split('-')[0];
+        let day = i.split('-')[1];
+        return `${year}-${mounth < 10 ? 0 + mounth : mounth}-${day <10 ? 0 + day : day}`
+    })
+}
+
 
 export function Base64() {
  

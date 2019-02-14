@@ -6,6 +6,7 @@ import ChangeUserInfo from './ChangeUserInfo';
 import Alarm from './AlarmSetting';
 import AlarmDetail from './AlarmDetail';
 import HealthHome from './HealthHome';
+import HealthChart from './HealthChart';
 
 export default createStackNavigator({
     Home: {
@@ -31,6 +32,12 @@ export default createStackNavigator({
     },
     HealthHome: {
         screen: HealthHome,
+        navigationOptions: {
+            header: null,
+        }
+    },
+    HealthChart: {
+        screen: HealthChart,
         navigationOptions: {
             header: null,
         }

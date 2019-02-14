@@ -17,6 +17,7 @@
     "react-native-calendars": "^1.22.0",
     "react-native-checkbox": "^2.0.0",
     "react-native-datepicker": "^1.7.2",
+    "react-native-echarts": "^0.0.1",
     "react-native-gifted-chat": "^0.6.0",
     "react-native-image-zoom-viewer": "^2.2.25",
     "react-native-material-ui": "^1.30.1",

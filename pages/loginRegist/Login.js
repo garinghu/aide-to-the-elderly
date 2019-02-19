@@ -33,6 +33,7 @@ export default class Login extends React.Component {
                     if(res.data.errno) {
                         Alert.alert(res.data.errText);
                     }else {
+                        // 初始化storage
                         storage.save('userInfo',  {
                             userid: res.data.data.Id,
                             username: res.data.data.username,
@@ -44,7 +45,9 @@ export default class Login extends React.Component {
                         storage.save('searchList', []);
                         storage.save('friendInfo', []);
                         storage.save('alarmInfo',  []);
-                        navigation.navigate('PostBar');
+                        setTimeout(() => {
+                            navigation.navigate('PostBar');
+                        }, 2000)
                     }
                 })
                 .catch(err => {
@@ -52,6 +55,11 @@ export default class Login extends React.Component {
                 })
             }
         }
+    }
+
+    toRegist = () => {
+        const { navigation } = this.props;
+        navigation.navigate('Regist');
     }
 
     render() {
@@ -64,7 +72,7 @@ export default class Login extends React.Component {
                             onChangeText={e => debounce(500)(this.setState({ phone: e }))}/>
                         </Item>
                         <Item fixedLabel>
-                            <Input placeholder='输入密码' type='password'
+                            <Input placeholder='输入密码' password={true}
                             onChangeText={e => debounce(500)(this.setState({ password: e }))}/>
                         </Item>
                     </Form>
@@ -76,7 +84,7 @@ export default class Login extends React.Component {
 
                     <View style={styles.noAccountContainer}>
                         <Text note>还没有账号？</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.toRegist()}>
                             <Text note 
                             style={{ color: '#ed655f' }}>立即注册</Text>
                         </TouchableOpacity>

@@ -23,6 +23,7 @@ export default class NewPost extends React.Component {
             uri: '',
             userid: '',
             type: '',
+            base64: '',
         };
     }
 
@@ -42,13 +43,12 @@ export default class NewPost extends React.Component {
     _pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
+            base64: true,
             aspect: [4, 3],
         });
     
-        console.log(result);
-    
         if (!result.cancelled) {
-            this.setState({ uri: result.uri });
+            this.setState({ uri: result.uri, base64: result.base64 });
         }
     };
 
@@ -65,9 +65,9 @@ export default class NewPost extends React.Component {
     }
 
     submitNewPost = () => {
-        const { title, content, uri, userid, type } = this.state;
+        const { title, content, uri, userid, type, base64 } = this.state;
         const navigation = this.props.navigation;
-        Axios.post(ADD_NEW_POST, { title, content, uri, userid, type, })
+        Axios.post(ADD_NEW_POST, { title, content, uri, userid, type, base64 })
         .then(res => {
             if(res.data == 'success') {
                 DeviceEventEmitter.emit('Key', '待传参数');

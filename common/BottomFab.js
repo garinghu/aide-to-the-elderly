@@ -17,28 +17,45 @@ export default class BottomFab extends React.Component {
         this.state = {
             location: null,
             errorMessage: null,
+            latitude: '', 
+            longitude: '',
         }
+    }
+
+    async componentDidMount() {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        console.log(status);
+        if (status !== 'granted') {
+            this.setState({
+                errorMessage: 'Permission to access location was denied',
+            });
+        }
+    
+        let { coords: { latitude, longitude, } } = await Location.getCurrentPositionAsync({});
+
+        this.setState({ latitude, longitude, });
     }
 
     toAlarm = () => {
         storage.load('alarmInfo', res => {
             const alarm = [...res];
-            alarm[id].choose = !choose;
             let hasChoosed = false;
+            let choosedPhones = [];
             for(let i in alarm) {
                 if(alarm[i].choose) {
                     hasChoosed = true
+                    choosedPhones.push(alarm[i].phone)
                 }
             }
             if(!hasChoosed) {
                 Alert.alert('请在我的->报警设置页面设置联系人');
             }else {
-                const { coords: { latitude, longitude } } = this._getLocationAsync();
+                const { latitude, longitude, } = this.state;
                 Axios.post(GET_GEO_BY_COORDS, {
                     latitude, longitude,
                 }).then(res => {
-                    const { result: { adress } } = res.data;
-                    Axios.post(SEND_LOCATE_SMS, { adress }).then(res => {
+                    const { address } = res.data;
+                    Axios.post(SEND_LOCATE_SMS, { address, phone: choosedPhones[0] }).then(res => {
                         if(res.code == 0) {
                             Alert.alert('报警信息已发送');
                         }

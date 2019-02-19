@@ -156,6 +156,7 @@ export default class PostBar extends React.Component {
     }
 
     onPullRelease = (resolve) => {
+        console.log('onPullRelease');
         this.refreshData();
 		setTimeout(() => {
             resolve();
@@ -163,6 +164,7 @@ export default class PostBar extends React.Component {
     }
 
     loadMore = () => {
+        console.log('loadMore');
         const { requestTime, messagesType, requestFriendTime, firstLoad  } = this.state;
         storage.load('userInfo', (data) => {
             const { userid } = data;
@@ -206,6 +208,7 @@ export default class PostBar extends React.Component {
                             this.setState({
                                 cardList: this.state.cardList.cloneWithRows(this.dataSource),
                                 requestTime: this.state.requestTime + 1,
+                                hasAll: false,
                             })
                         }
                     }).catch(err => {

@@ -61,7 +61,7 @@ export const getTheWeekDaysYYMMDD = (y, m, d) => {
     for (var i = 0; i < 7; i++) {
         dates.push(new Date(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).toLocaleDateString().replace(/\//g, '-'));
     }
-    return reverseDates(dates)
+    return dates;
 }
 
 export const getTheMounthDaysYYMMDD = (y, m, d) => {
@@ -83,9 +83,9 @@ export const getLastDate = (y, m, d) => {
     var currentDate = new Date(y, m, d)
     var timesStamp = currentDate.getTime();
     var date = new Date(timesStamp - 24 * 60 * 60 * 1000 ).toLocaleDateString().replace(/\//g, '-');
-    let year = date.split('-')[2];
-    let mounth = date.split('-')[0];
-    let day = date.split('-')[1];
+    let year = date.split('-')[0];
+    let mounth = date.split('-')[1];
+    let day = date.split('-')[2];
     return `${year}-${mounth}-${day}`
 }
 
@@ -93,9 +93,9 @@ export const getNextDate = (y, m, d) => {
     var currentDate = new Date(y, m, d)
     var timesStamp = currentDate.getTime();
     var date = new Date(timesStamp + 24 * 60 * 60 * 1000 ).toLocaleDateString().replace(/\//g, '-');
-    let year = date.split('-')[2];
-    let mounth = date.split('-')[0];
-    let day = date.split('-')[1];
+    let year = date.split('-')[0];
+    let mounth = date.split('-')[1];
+    let day = date.split('-')[2];
     return `${year}-${mounth}-${day}`
 }
 

@@ -18,4 +18,8 @@ export default createStackNavigator({
             headerTitle: <AlarmHeader />,
         }
     },
+}, {
+    navigationOptions: {
+        gesturesEnabled: false
+    }
 })

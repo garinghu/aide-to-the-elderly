@@ -23,5 +23,7 @@ export default createStackNavigator({
         screen: ChatDetail,
     }
 }, {
-   
+    navigationOptions: {
+        gesturesEnabled: false
+    }
 })

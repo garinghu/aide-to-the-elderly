@@ -15,4 +15,8 @@ export default createStackNavigator({
     Regist: {
         screen: Regist,
     }
+}, {
+    navigationOptions: {
+        gesturesEnabled: false
+    }
 })

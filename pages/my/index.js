@@ -42,4 +42,8 @@ export default createStackNavigator({
             header: null,
         }
     },
-},)
+}, {
+    navigationOptions: {
+        gesturesEnabled: false
+    }
+})

@@ -67,7 +67,7 @@ class ShowCard extends React.Component {
             this.state.collection--;
             this.state.hascollection = 0;
         }
-        Axios.post(MESSAGE_ADD_COLLECTIONS, { 
+        Axios.post(MESSAGE_ADD_COLLECTIONS, {
             collections: this.state.collection,
             cardId,
             userId: userid,
@@ -95,8 +95,8 @@ class ShowCard extends React.Component {
     render() {
         const props = this.props;
         const { cardContent, cardPress } = props;
-        const { userName, headImg, time, type } = cardContent;
-        const { collection, good, hasgood, } = this.state;
+        const { userName, headImg, time, type,  name } = cardContent;
+        const { collection, good, hasgood } = this.state;
         const content = JSON.parse(b.decode(cardContent.content));
         return (
             <Card style={{flex: 0}}>
@@ -116,8 +116,8 @@ class ShowCard extends React.Component {
                 </CardItem>
                 <CardItem>
                     <Body>
+                        <Text  onPress={cardPress}>{name}</Text>
                         <Image source={{uri: `${content.bodyImg}`}} style={{height: 200, width: 200, flex: 1}}/>
-                        <Text  onPress={cardPress}>{content.content}</Text>
                     </Body>
                 </CardItem>
                 <CardItem>

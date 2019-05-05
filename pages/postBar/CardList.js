@@ -1,9 +1,10 @@
 import React from 'react';
 import { Permissions, Notifications } from 'expo';
-import { StyleSheet, View, Image, DeviceEventEmitter, ListView, ActivityIndicator,} from 'react-native';
+import { StyleSheet, View, Image, DeviceEventEmitter, ListView, ActivityIndicator, Alert } from 'react-native';
 import {PullList} from 'react-native-pull';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Drawer, Text, Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body } from 'native-base';
+import RNShakeEvent from 'react-native-shake-event';
 import Axios from 'axios';
 
 import { storage } from '../../storage';
@@ -24,7 +25,7 @@ export default class PostBar extends React.Component {
         this.dataSource = [];
         this.friendDataSource = [];
         this.state = {
-            cardList: (new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})),
+            cardList: (new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})).cloneWithRows(this.dataSource),
             cardFriendList: (new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})),
             requestTime: 1,
             requestFriendTime: 1,
@@ -35,6 +36,11 @@ export default class PostBar extends React.Component {
             firstLoad: true,
         };
     }
+    // componentWillMount() {
+    //     RNShakeEvent.addEventListener('shake', () => {
+    //       Alert.alert('shake');
+    //     });
+    // }
 
     async componentDidMount() {
         // 测试环境偶尔失效，要重新save
@@ -118,7 +124,7 @@ export default class PostBar extends React.Component {
                 Axios.post(GET_ALL_MESSAGE, { userid, requestTime: 1 }).then(res => {
                     console.log('normal');
                     if(res.data == 'all') {
-                        this.setState({ hasAll: true, cardList: (new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}))});
+                        this.setState({ hasAll: true });
                     } else {
                         this.setState({
                             cardList: this.state.cardList.cloneWithRows(res.data),
@@ -133,7 +139,7 @@ export default class PostBar extends React.Component {
                 Axios.post(SEARCH_MESSAGES_BY_FRIENDS, { userid, requestTime: 1 }).then(res => {
                     console.log('friend');
                     if(res.data == 'all') {
-                        this.setState({ friendHasAll: true, cardFriendList: (new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}))});
+                        this.setState({ friendHasAll: true, cardFriendList: (new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})).cloneWithRows([])});
                     } else {
                         this.setState({
                             cardFriendList: this.state.cardList.cloneWithRows(res.data),
@@ -164,18 +170,17 @@ export default class PostBar extends React.Component {
     }
 
     loadMore = () => {
-        console.log('loadMore');
         const { requestTime, messagesType, requestFriendTime, firstLoad  } = this.state;
         storage.load('userInfo', (data) => {
             const { userid } = data;
-            if(firstLoad) {
+            // if(firstLoad) {
                 Axios.post(GET_ALL_MESSAGE, { userid, requestTime: 1 }).then(res => {
                     if(res.data == 'all') {
-                        this.setState({ hasAll: true, cardList: (new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}))});
+                        this.setState({ hasAll: true});
                     } else {
                         this.setState({
                             cardList: this.state.cardList.cloneWithRows(res.data),
-                            hasAll: false,
+                            // hasAll: false,
                             requestTime: 1,
                         })
                     }
@@ -197,39 +202,39 @@ export default class PostBar extends React.Component {
                     console.log(err);
                 })
     
-                this.setState({ firstLoad: false })
-            } else {
-                if(messagesType == 'normal') {
-                    Axios.post(GET_ALL_MESSAGE, { userid, requestTime }).then(res => {
-                        if(res.data == 'all') {
-                            this.setState({ hasAll: true });
-                        } else {
-                            this.dataSource = [...this.dataSource, ...res.data];
-                            this.setState({
-                                cardList: this.state.cardList.cloneWithRows(this.dataSource),
-                                requestTime: this.state.requestTime + 1,
-                                hasAll: false,
-                            })
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                    })
-                } else {
-                    Axios.post(SEARCH_MESSAGES_BY_FRIENDS, { userid, requestTime: requestFriendTime }).then(res => {
-                        if(res.data == 'all') {
-                            this.setState({ friendHasAll: true });
-                        } else {
-                            this.dataSource = [...this.friendDataSource, ...res.data];
-                            this.setState({
-                                cardFriendList: this.state.cardList.cloneWithRows(this.dataSource),
-                                requestFriendTime: this.state.requestFriendTime + 1,
-                            })
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                    })
-                }
-            }
+                // this.setState({ firstLoad: false })
+            // } else {
+            //     if(messagesType == 'normal') {
+            //         Axios.post(GET_ALL_MESSAGE, { userid, requestTime }).then(res => {
+            //             if(res.data == 'all') {
+            //                 this.setState({ hasAll: true });
+            //             } else {
+            //                 this.dataSource = [...this.dataSource, ...res.data];
+            //                 this.setState({
+            //                     cardList: this.state.cardList.cloneWithRows(this.dataSource),
+            //                     requestTime: this.state.requestTime + 1,
+            //                     hasAll: false,
+            //                 })
+            //             }
+            //         }).catch(err => {
+            //             console.log(err);
+            //         })
+            //     } else {
+            //         Axios.post(SEARCH_MESSAGES_BY_FRIENDS, { userid, requestTime: requestFriendTime }).then(res => {
+            //             if(res.data == 'all') {
+            //                 this.setState({ friendHasAll: true });
+            //             } else {
+            //                 this.dataSource = [...this.friendDataSource, ...res.data];
+            //                 this.setState({
+            //                     cardFriendList: this.state.cardList.cloneWithRows(this.dataSource),
+            //                     requestFriendTime: this.state.requestFriendTime + 1,
+            //                 })
+            //             }
+            //         }).catch(err => {
+            //             console.log(err);
+            //         })
+            //     }
+            // }
         })
     }
 
@@ -301,10 +306,9 @@ export default class PostBar extends React.Component {
                         topIndicatorRender={this.topIndicatorRender} 
                         topIndicatorHeight={60}
                         dataSource={messagesType == 'normal' ? cardList : cardFriendList}
-                        pageSize={5}
-                        initialListSize={5}
                         renderRow={this.renderRow}
                         onEndReached={(resolve) => this.loadMore(resolve)}
+                        onEndReachedThreshold={0.1}
                         renderFooter={this.renderFooter}
                     />
                 

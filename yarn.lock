@@ -4223,6 +4223,13 @@ react-native-screens@^1.0.0-alpha.11:
   version "1.0.0-alpha.22"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.22.tgz#7a120377b52aa9bbb94d0b8541a014026be9289b"
 
+react-native-shake-event@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-shake-event/-/react-native-shake-event-4.0.1.tgz#b167e844b711eff50d44d029537fbb228b2ac6b2"
+  integrity sha512-J3kFUzmQmuk8E+bn5O4mdxcAMWZ+MItgVpNExupc37iXV7GyfxNYCfQ7eHA1ZtF6KE8NCWMiHIIVH4DDCFF6PA==
+  dependencies:
+    invariant "^2.2.2"
+
 react-native-socketio@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/react-native-socketio/-/react-native-socketio-0.3.0.tgz#3993716f579fdeb0043323c4e57fa23bc7b66807"

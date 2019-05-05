@@ -46,6 +46,7 @@ class SearchModal extends React.Component {
                         const { userid } = data;
                         Axios.post(SEARCH_MESSAGES_BY_TYPE, { type: text, userid, requestTime: 1 })
                         .then(res => {
+                            console.log('typeList', res.data);
                             this.setState({
                                 typeList: res.data,
                             })
@@ -130,7 +131,7 @@ class SearchModal extends React.Component {
                                 <Text>帖子</Text>
                             </TabHeading>}
                             topTabBarActiveTextColor='#ed6560'> 
-                                {messageList.map((item, index) => <ShowCard 
+                                {(Array.isArray(messageList) ? messageList : []).map((item, index) => <ShowCard 
                                     key={item.id} cardContent={item}
                                     fromSearch={true} 
                                     cardPress={() => this.cardPress(item)}/>)}
@@ -139,7 +140,7 @@ class SearchModal extends React.Component {
                                 <Text>主题</Text>
                             </TabHeading>}
                             topTabBarActiveTextColor='#ed6560'> 
-                                {typeList.map((item, index) => <ShowCard 
+                                {(Array.isArray(typeList) ? typeList : []).map((item, index) => <ShowCard 
                                     key={item.id} cardContent={item}
                                     fromSearch={true}  
                                     cardPress={() => this.cardPress(item)}/>)}
@@ -149,7 +150,7 @@ class SearchModal extends React.Component {
                             </TabHeading>}
                             topTabBarActiveTextColor='#ed6560'> 
                                 <List>
-                                    {userList.map((item, index) => <ListItem thumbnail key={index}>
+                                    {(Array.isArray(userList) ? userList : []).map((item, index) => <ListItem thumbnail key={index}>
                                     <Left>
                                         <Thumbnail source={{ uri: item.head }} />
                                     </Left>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Modal, TouchableHighlight, View } from 'react-native';
+import { StyleSheet, Modal, TouchableHighlight, View, Alert } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Container, Header, Left, Right, Button, Content, Text, Form, Item, Input, Label, } from 'native-base';
@@ -34,7 +34,11 @@ class HealthAddModal extends React.Component {
     changeHealthData = (key, val) => {
         const { healthData } = this.state;
         if(val) {
-            healthData[key] = val;
+            if(isNaN(val*1)) {
+                Alert.alert('请输入正确的信息');
+            } else {
+                healthData[key] = val;
+            }
         } else {
             // agenda组件不允许传空属性
             delete healthData[key];

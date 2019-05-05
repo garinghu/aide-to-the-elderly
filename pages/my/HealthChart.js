@@ -44,15 +44,32 @@ export default class HealthChart extends React.Component {
             thisMounth: getTheMounthDaysYYMMDD(year, mounth, day),
             thisWeek: weeks,
             selectDateText: `${weeks[0]}至${weeks[weeks.length - 1]}`,
-            currentX: weeks,
+            currentX: this.formatWeeks(weeks),
         })
-        this.getCurrentY(weeks, type)
+        this.getCurrentY(this.formatWeeks(weeks), type)
+    }
+
+    formatWeeks = (weeks) => {
+        return weeks.map((item) => {
+            const year = item.split('-')[0];
+            let mounth = item.split('-')[1];
+            let day = item.split('-')[2];
+            if(mounth.length < 2) {
+                mounth = `0${mounth}`
+            }
+
+            if(day.length < 2) {
+                day = `0${day}`
+            }
+            return `${year}-${mounth}-${day}`
+        })
     }
 
     getCurrentY = (currentX, type) => {
         const data = [];
         storage.load('healthInfo', res => {
             for(let i in currentX) {
+                console.log(currentX[i], type, res[currentX[i]])
                 if(res[currentX[i]]) {
                     data.push(res[currentX[i]][type] || 0)
                 } else {
@@ -116,9 +133,9 @@ export default class HealthChart extends React.Component {
             this.setState({
                 thisWeek: nextWeeks,
                 selectDateText: `${nextWeeks[0]}至${nextWeeks[nextWeeks.length - 1]}`,
-                currentX: nextWeeks,
+                currentX: this.formatWeeks(nextWeeks),
             })
-            this.getCurrentY(nextWeeks, type)
+            this.getCurrentY(this.formatWeeks(nextWeeks), type)
         } else if(selectedTab.cycle == 30) {
             const { thisMounth } = this.state;
             const year = thisMounth[thisMounth.length - 1].split('-')[0];
@@ -151,9 +168,9 @@ export default class HealthChart extends React.Component {
             this.setState({
                 thisWeek: lastWeeks,
                 selectDateText: `${lastWeeks[0]}至${lastWeeks[lastWeeks.length - 1]}`,
-                currentX: lastWeeks,
+                currentX: this.formatWeeks(lastWeeks),
             })
-            this.getCurrentY(lastWeeks, type)
+            this.getCurrentY(this.formatWeeks(nextWeeks), type)
         } else if(selectedTab.cycle == 30) {
             const { thisMounth } = this.state;
             const year = thisMounth[thisMounth.length - 1].split('-')[0];

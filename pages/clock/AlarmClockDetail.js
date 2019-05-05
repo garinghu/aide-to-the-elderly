@@ -91,6 +91,7 @@ export default class AlarmClockDetail extends Component {
             storage.save('clocks',  clocks);
             DeviceEventEmitter.emit('refreshClocks', '待传参数');
             if(mode == 'new') {
+                DeviceEventEmitter.emit('changeShowMode', true);
                 navigation.navigate('AlarmClockCardList');
             }
         }) : Alert.alert(NO_TIME_NO_TEXT); 

@@ -10,6 +10,7 @@ import Config from '../../config';
 import MyHeader from '../../common/MyHeader';
 
 const ADD_COMMITS = `${Config.proxy}/addcommits`;
+const ADD_SECOUND_COMMITS = `${Config.proxy}/addsecoundcommits`;
 const user = {};
 const b = new Base64();
 
@@ -31,6 +32,8 @@ export default class CardDetail extends React.Component {
             time,
             headImg,
             fromSearch,
+            isSecound: false,
+            secoundIndex: null,
         }
     }
 
@@ -49,37 +52,79 @@ export default class CardDetail extends React.Component {
     }
 
     addCommit = (id) => {
-        const { commitContent, cardDetailContent, } = this.state;
+        const { commitContent, cardDetailContent, secoundIndex, isSecound } = this.state;
         const { userid, username, headImg } = user;
-        Axios.post(ADD_COMMITS, { cardId: id, commit: commitContent, userid, userName: username, headImg, })
-        .then(res => {
-            cardDetailContent.commits.unshift({
-                "name": `${username}`,
-                "content": `${commitContent}`,
-                "goods": 0,
-                "userid": `${userid}`,
-                "headImg": `${headImg}`,
-                "time": `${getDate()}`
+        if(!isSecound) {
+            Axios.post(ADD_COMMITS, { cardId: id, commit: commitContent, userid, userName: username, headImg, })
+            .then(res => {
+                cardDetailContent.commits.unshift({
+                    "name": `${username}`,
+                    "content": `${commitContent}`,
+                    "goods": 0,
+                    "userid": `${userid}`,
+                    "headImg": `${headImg}`,
+                    "time": `${getDate()}`,
+                    "secound": [],
+                })
+                DeviceEventEmitter.emit('Key', '待传参数');
+                this.setState({});
             })
-            DeviceEventEmitter.emit('Key', '待传参数');
-            this.setState({});
-        })
-        .catch(err => {
-            console.log(err)
-        })
+            .catch(err => {
+                console.log(err)
+            })
+        } else {
+            Axios.post(ADD_SECOUND_COMMITS, { cardId: id, commit: commitContent, userid, userName: username, headImg, index: secoundIndex})
+            .then(res => {
+                cardDetailContent.commits[index].second.unshift({
+                    "name": `${username}`,
+                    "content": `${commitContent}`,
+                    "goods": 0,
+                    "userid": `${userid}`,
+                    "headImg": `${headImg}`,
+                    "time": `${getDate()}`,
+                })
+                DeviceEventEmitter.emit('Key', '待传参数');
+                this.setState({ cardDetailContent: [] });
+                setTimeout(() => {
+                    this.setState({ cardDetailContent });
+                }, 0)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
     }
 
     changeCommits = e => {
+        const test = /(^@\s[a-zA-Z0-9_-]+\s)/;
+        if(!test.test(e)) {
+            this.setState({
+                secoundIndex: null,
+                isSecound: false,
+            })
+        }
         this.setState({
             commitContent: e,
         })
+    }
+
+    addSecoundCommit = (index, name) => {
+        const { isSecound } = this.state;
+        if (!isSecound) {
+            this.setState({
+                commitContent: `@ ${name} `,
+                isSecound: true,
+                secoundIndex: index,
+            })
+        }
     }
 
 
     render() {
         const { cardDetailContent, cardIdname,
             userName,
-            time, headImg, cardId, fromSearch } = this.state;
+            time, headImg, cardId, fromSearch, name, commitContent } = this.state;
+        console.log(cardDetailContent.commits);
         return (
             <Container>
                 <MyHeader callBack={() => {
@@ -99,6 +144,7 @@ export default class CardDetail extends React.Component {
                         </CardItem>
                         <CardItem cardBody>
                             <Body>
+                                <Text>{name}</Text>
                                 <Image source={{uri: `${cardDetailContent.bodyImg}`}} style={{height: 200, width: 200, flex: 1}}/>
                             </Body>
                         </CardItem>
@@ -110,24 +156,52 @@ export default class CardDetail extends React.Component {
                     <View style={styles.commits}>
                         <Text note style={styles.commitsTitle}>热门评论</Text>
                         {(cardDetailContent.commits || []).map((item, index) => <Card key={index}>
-                            <CardItem> 
+                            <CardItem>
                                 <Left>
                                     <Thumbnail source={{uri: `${item.headImg}`}} />
                                     <Body>
-                                        <Text>{item.name}</Text>
+                                        <TouchableOpacity onPress ={() => this.addSecoundCommit(index, item.name)}>
+                                            <Text>{item.name}</Text>
+                                        </TouchableOpacity>
                                         <Text note>{item.time}</Text>
                                     </Body>
                                 </Left>
-                                <Right>
-                                    <Button transparent danger onPress={() => this.addGoods(index)}>
-                                        <Icon name="heart" />
-                                        <Text>{item.goods}</Text>
-                                    </Button>
-                                </Right>
+                                {
+                                    // <Right>
+                                    //     <Button transparent danger onPress={() => this.addGoods(index)}>
+                                    //         <Icon name="heart" />
+                                    //         <Text>{item.goods}</Text>
+                                    //     </Button>
+                                    // </Right>
+                                }
                             </CardItem>
                             <CardItem cardBody>
                                 <Body>
                                     <Text style={{ marginLeft: 10 }}>{item.content}</Text>
+                                    {
+                                        (item.second || []).length ? item.second.map((item, index) => {
+                                            return <Card key={index} style={{ width: '80%', marginLeft: '10%'}}>
+                                            <CardItem>
+                                                <Left>
+                                                    <Thumbnail source={{uri: `${item.headImg}`}} />
+                                                    <Body>
+                                                        <TouchableOpacity onPress ={() => this.addSecoundCommit(index, item.name)}>
+                                                            <Text>{item.name}</Text>
+                                                        </TouchableOpacity>
+                                                        <Text note>{item.time}</Text>
+                                                    </Body>
+                                                </Left>
+                                            </CardItem>
+                                            <CardItem cardBody>
+                                                <Body>
+                                                    <Text style={{ marginLeft: 10 }}>{item.content}</Text>
+                                                </Body>
+                                            </CardItem>
+                                            <CardItem>
+                                            </CardItem>
+                                        </Card>
+                                        }): null
+                                    }
                                 </Body>
                             </CardItem>
                             <CardItem>
@@ -135,16 +209,17 @@ export default class CardDetail extends React.Component {
                         </Card>)}
                     </View>
 
-                    <View style={styles.commits}>
-                        <Text note style={styles.commitsTitle}>所有评论</Text>
-                    </View>
+                    {
+                        // <View style={styles.commits}>
+                        //     <Text note style={styles.commitsTitle}>所有评论</Text>
+                        // </View>
+                    }
                 </Content>
                 <Item regular style={styles.commitsContainer}>
-                    <Input placeholder='评论' style={{ height: 40, }} onChangeText={e => debounce(500)(this.changeCommits(e))}/>
+                    <Input placeholder='评论' style={{ height: 40, }} value={commitContent} onChangeText={e => debounce(500)(this.changeCommits(e))}/>
                     <TouchableOpacity onPress ={() => this.addCommit(cardId)}>
                         <FontAwesome name='commenting-o' style={{ fontSize: 20, }}/>
                     </TouchableOpacity>
-                    <Icon name="star" style={{ fontSize: 20, }}/>
                 </Item>
                 <Footer />
             </Container>

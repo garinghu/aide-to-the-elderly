@@ -4,7 +4,7 @@ import { createStackNavigator } from "react-navigation";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body } from 'native-base';
 
-import CardList from './CardList';
+import CardList from './CardListTest';
 import CardDetail from './CardDetail';
 import PostHeader from './PostHeader';
 import NewPost from './newPost';

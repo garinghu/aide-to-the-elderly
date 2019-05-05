@@ -11,6 +11,7 @@ import ShowCard from '../../common/ShowCard';
 
 const SCOKET_SERVER = Config.socketServer;
 const GET_ALL_BY_USERID = `${Config.proxy}/getallbyuserid`;
+const GET_FRIEND_BY_USERID = `${Config.proxy}/getfriendsbyuserid`;
 const DELETE_FRIEND_BY_USER_ID = `${Config.proxy}/deletefriendbyuserid`;
 const tabs = ['发帖', '点赞', '收藏'];
 
@@ -26,7 +27,7 @@ export default class WritterList extends React.Component {
         this.state = {
             isMe: false, 
             writterId,
-            alreadyFriend,
+            alreadyFriend: false,
             userInfo: {},
             messages: [],
             goods: [],
@@ -44,6 +45,14 @@ export default class WritterList extends React.Component {
             this.setState({ userInfo, messages, goods, collections })
         })
         storage.load('userInfo', (data) => {
+            Axios.post(GET_FRIEND_BY_USERID, { userid: data.userid })
+            .then(res => {
+                for(let i in res.data) {
+                    if(res.data[i].withWhomInfo.Id == writterId) {
+                        this.setState({ alreadyFriend: true })
+                    }
+                }
+            })
             if(writterId == data.userid) {
                 this.setState({ isMe: true });
             }

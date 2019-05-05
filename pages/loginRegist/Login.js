@@ -30,6 +30,7 @@ export default class Login extends React.Component {
             }else {
                 Axios.post(LOGIN, { phone, password })
                 .then(res => {
+                    console.log(res.data);
                     if(res.data.errno) {
                         Alert.alert(res.data.errText);
                     }else {

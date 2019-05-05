@@ -1,6 +1,6 @@
 import React from 'react';
 import { Permissions, Notifications } from 'expo';
-import { StyleSheet, View, Image, CheckBox, Switch, Alert, DeviceEventEmitter, } from 'react-native';
+import { StyleSheet, DeviceEventEmitter, } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Left, Body, Right, Button } from 'native-base';
 import Axios from 'axios';
@@ -30,7 +30,6 @@ export default class AlarmClockList extends React.Component {
         const { status: existingStatus } = await Permissions.getAsync(
             Permissions.NOTIFICATIONS
         );
-        console.log(existingStatus)
         let finalStatus = existingStatus;
         if (existingStatus !== 'granted') {
             const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
@@ -48,14 +47,31 @@ export default class AlarmClockList extends React.Component {
         .catch(err => {
             console.log(err)
         })
-        // Notifications.presentLocalNotificationAsync({
-        //     title: '123',
-        //     body: '123',
-        //     data: {
-        //         test: 123,
-        //     }
-        // });
         this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    }
+
+    testLocalNotification10 = () => {
+        setTimeout(() => {
+            Notifications.presentLocalNotificationAsync({
+                title: '123',
+                body: '123',
+                data: {
+                    test: 123,
+                }
+            });
+        }, 10000)
+    }
+
+    testNotification10 = () => {
+        setTimeout(() => {
+            Notifications.presentLocalNotificationAsync({
+                title: '123',
+                body: '123',
+                data: {
+                    test: 123,
+                }
+            });
+        }, 10000)
     }
 
     _handleNotification = (notification) => {
@@ -85,6 +101,14 @@ export default class AlarmClockList extends React.Component {
                 <List>
                     {clocks.map((item, index) => <AlarmClockCard key={index} detail={{...item, index}}/>)}
                 </List>
+                <Button full danger 
+                onPress={() => this.testLocalNotification10()}>
+                    <Text>测试: 10s后发送本地推送</Text>
+                </Button>
+                <Button full danger 
+                onPress={() => this.testNotification10()}>
+                    <Text>测试: 10s后发送远程推送</Text>
+                </Button>
                 </Content>
                 {
                     // <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

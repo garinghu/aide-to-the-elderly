@@ -24,7 +24,6 @@ export default class BottomFab extends React.Component {
 
     async componentDidMount() {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        console.log(status);
         if (status !== 'granted') {
             this.setState({
                 errorMessage: 'Permission to access location was denied',
@@ -68,7 +67,6 @@ export default class BottomFab extends React.Component {
 
     _getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        console.log(status);
         if (status !== 'granted') {
             this.setState({
                 errorMessage: 'Permission to access location was denied',

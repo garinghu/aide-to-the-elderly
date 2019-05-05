@@ -1,6 +1,6 @@
 import React from 'react';
 import { ImagePicker, Camera, Permissions } from 'expo';
-import { StyleSheet, Text, View, Image, DeviceEventEmitter, TouchableOpacity, TextInput} from 'react-native';
+import { StyleSheet, Text, View, Image, DeviceEventEmitter, TouchableOpacity, TextInput, Alert} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Container, Header, Content, Form, Item, Input, Label, Textarea, Button } from 'native-base';
 import Axios from 'axios';
@@ -67,16 +67,20 @@ export default class NewPost extends React.Component {
     submitNewPost = () => {
         const { title, content, uri, userid, type, base64 } = this.state;
         const navigation = this.props.navigation;
-        Axios.post(ADD_NEW_POST, { title, content, uri, userid, type, base64 })
-        .then(res => {
-            if(res.data == 'success') {
-                DeviceEventEmitter.emit('Key', '待传参数');
-                navigation.navigate('CardList');
-            }
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        if(title && content && uri && type) {
+            Axios.post(ADD_NEW_POST, { title, content, uri, userid, type, base64 })
+            .then(res => {
+                if(res.data == 'success') {
+                    DeviceEventEmitter.emit('Key', '待传参数');
+                    navigation.navigate('CardList');
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        } else {
+            Alert.alert('请完善信息')
+        }
     }
 
     render() {

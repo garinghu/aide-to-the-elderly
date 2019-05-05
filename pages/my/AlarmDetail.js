@@ -46,7 +46,7 @@ export default class AlarmDetail extends Component {
 
     sendVerificationCode = () => {
         let { sendTime, phone } = this.state;
-        if(!(/^1[34578]\d{9}$/.test(phone))) {
+        if(false) {
             Alert.alert('请输入正确的手机号')
         }else {
             this.setState({ showSendButton: false })
